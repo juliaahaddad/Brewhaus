@@ -2,7 +2,16 @@
 
 /* Base styles */
 body {
-    font-family: 'Inter', sans-serif;
+
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+
+
+
+
+
     background-color: #1a1a1a;
     color: #f0f0f0;
     transition: all 0.5s ease;
@@ -292,10 +301,24 @@ nav a:not(.active-link):hover::after {
 }
 
 @keyframes dots {
-    0%, 20% { content: ''; }
-    40% { content: '.'; }
-    60% { content: '..'; }
-    80%, 100% { content: '...'; }
+
+    0%,
+    20% {
+        content: '';
+    }
+
+    40% {
+        content: '.';
+    }
+
+    60% {
+        content: '..';
+    }
+
+    80%,
+    100% {
+        content: '...';
+    }
 }
 
 /* Scroll animations */
@@ -326,8 +349,15 @@ nav a:not(.active-link):hover::after {
 }
 
 @keyframes floating {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 /* Pulse animation */
@@ -336,9 +366,17 @@ nav a:not(.active-link):hover::after {
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 /* Glow effects */
@@ -356,11 +394,11 @@ nav a:not(.active-link):hover::after {
     .fade-in {
         animation-duration: 0.8s;
     }
-    
+
     .card:hover {
         transform: translateY(-4px);
     }
-    
+
     .btn-primary:hover,
     .btn-secondary:hover {
         transform: translateY(-1px);
@@ -401,4 +439,3 @@ nav a:not(.active-link):hover::after {
 * {
     transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
 }
-
