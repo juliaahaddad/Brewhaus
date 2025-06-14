@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BREWHAUS - The Space</title>
+    <!-- Tailwind CSS CDN for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Inter and Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:ital,wght@1,400..900&display=swap"
+        rel="stylesheet" />
+    <!-- External stylesheet, if any custom styles are defined there -->
+    <link rel="stylesheet" href="enhanced-style.css" />
+    <style>
+        /* Define custom colors for consistency */
+        :root {
+            --color-primary: #f8f8f8;
+            /* A light off-white */
+            --color-secondary: #a0a0a0;
+            /* A medium gray */
+            --color-accent: #f97316;
+            /* Tailwind's orange-500 */
+            --color-dark-bg: #1a1a1a;
+            /* Dark background for elements */
+            --color-light-bg: #282828;
+            /* Lighter dark background for buttons */
+        }
+
+        /* Set up default font and background for the body */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-dark-bg);
+            color: var(--color-primary);
+        }
+
+        /* Apply colors to Tailwind's custom properties if they are used elsewhere */
+        .text-primary {
+            color: var(--color-primary);
+        }
+
+        .text-secondary {
+            color: var(--color-secondary);
+        }
+
+        .text-accent {
+            color: var(--color-accent);
+        }
+
+        /* Custom CSS for fade-in animation on page load */
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+            opacity: 0;
+            /* Start invisible */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+                /* Slight slide up effect */
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Delay for the tabs section to animate after the main heading */
+        .fade-in-delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        /* Styles for the active tab button (reused for Vray Attempts button too) */
+        .tab-btn.tab-active {
+            background-color: var(--color-accent);
+            /* Active color from custom property */
+            color: white;
+        }
+
+        /* Transitions for grid items to smoothly hide/show */
+        .grid-item {
+            transition: opacity 0.3s ease, transform 0.3s ease, height 0.3s ease, margin 0.3s ease;
+            overflow: hidden;
+            /* Prevent content from showing during height transition */
+            cursor: pointer;
+            /* Indicate that items are clickable */
+        }
+
+        /* Styles for hidden grid items */
+        .grid-item.hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            /* Shrink slightly when hidden */
+            height: 0;
+            /* Collapse height to remove from document flow */
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            pointer-events: none;
+            /* Disable interactions when hidden */
+        }
+
+        /* Floating effect for the logo (if `floating` class is defined in enhanced-style.css) */
+        /* For demonstration, a basic floating effect if not in external CSS */
+        @keyframes floating {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        /* Modal Overlay Styles */
+        #image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            /* Ensure it's on top of everything */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        #image-modal.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Modal Content Styles */
+        #modal-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #modal-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            /* Ensure the image fits within the modal area */
+            border-radius: 0.5rem;
+            /* Tailwind's rounded-lg */
+        }
+
+        /* Close Button Styles */
+        #close-modal-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+            z-index: 1001;
+            /* Ensure button is above the image */
+            transition: color 0.2s ease;
+        }
+
+        #close-modal-btn:hover {
+            color: var(--color-accent);
+        }
+    </style>
+</head>
+
+<body class="py-20">
+
+    <!-- Header Section: Fixed at the top, responsive design -->
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-black bg-opacity-80 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo/Home link -->
+                <a href="index.html" class="text-2xl font-bold text-primary floating">BREWHAUS</a>
+                <!-- Navigation links for larger screens -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="enhanced-the-space.html"
+                        class="font-medium transition-colors hover:text-accent text-primary tab-link">Design Details</a>
+                    <a href="enhanced-design-story.html"
+                        class="font-medium transition-colors hover:text-accent text-secondary tab-link">Design Story</a>
+                    <a href="enhanced-site-analysis.html"
+                        class="font-medium transition-colors hover:text-accent text-secondary tab-link">Site
+                        Analysis</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area: Centered and padded -->
+    <div class="max-w-7xl mx-auto px-6 pt-16">
+        <!-- Page Title and Subtitle -->
+        <div class="text-center mb-16 fade-in">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 text-primary">Design Details</h1>
+            <p class="text-xl max-w-2xl mx-auto text-secondary">A visual journey through the design elements of
+                BREWHAUS.</p>
+        </div>
+
+        <!-- Category Filter Tabs (Main Filters) -->
+        <div class="flex flex-wrap justify-center gap-4 mb-8 fade-in fade-in-delay-1">
+            <!-- Each button has data-filter for JS and accessibility attributes -->
+            <button class="tab-btn px-4 py-2 rounded-full bg-light-bg text-primary hover:bg-opacity-80 transition-all"
+                data-filter="all" aria-selected="true" role="tab">All</button>
+            <button class="tab-btn px-4 py-2 rounded-full bg-light-bg text-primary hover:bg-opacity-80 transition-all"
+                data-filter="Floor Plans" aria-selected="false" role="tab">Floor Plans</button>
+            <button class="tab-btn px-4 py-2 rounded-full bg-light-bg text-primary hover:bg-opacity-80 transition-all"
+                data-filter="Sections" aria-selected="false" role="tab">Sections</button>
+            <button class="tab-btn px-4 py-2 rounded-full bg-light-bg text-primary hover:bg-opacity-80 transition-all"
+                data-filter="Elevations" aria-selected="false" role="tab">Elevations</button>
+            <button class="tab-btn px-4 py-2 rounded-full bg-light-bg text-primary hover:bg-opacity-80 transition-all"
+                data-filter="Design Process" aria-selected="false" role="tab">Design Process</button>
+            <button class="tab-btn px-4 py-2 rounded-full bg-light-bg text-primary hover:bg-opacity-80 transition-all"
+                data-filter="Renders" aria-selected="false" role="tab">Renders</button>
+            <button class="tab-btn px-4 py-2 rounded-full bg-light-bg text-primary hover:bg-opacity-80 transition-all"
+                data-filter="Schedules" aria-selected="false" role="tab">Schedules</button>
+        </div>
+
+        <!-- New container for the Failed Vray button and the main Images Grid -->
+        <div class="flex flex-col md:flex-row gap-6 mb-12">
+            <!-- Failed Vray Button Section (Sidebar) -->
+            <!-- This container will be toggled visible/hidden based on "Renders" tab selection -->
+            <div id="vray-btn-container" class="md:w-1/4 flex justify-center md:justify-start md:items-start hidden">
+                <button id="vray-attempts-btn"
+                    class="px-8 py-4 rounded-full bg-light-bg text-primary hover:bg-accent transition-all whitespace-nowrap shadow-lg text-lg">
+                    Failed Vray
+                </button>
+            </div>
+
+            <!-- Images Grid: Responsive layout for various screen sizes -->
+            <!-- Adjusted width for the grid to expand when Vray button is hidden -->
+            <div class="md:w-3/4 w-full">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Floor Plans images -->
+                    <div class="grid-item fade-in" data-category="Floor Plans">
+                        <img src="assets/Floor Plans/Detailed-Floor.jpg" alt="Detailed Floor Plan"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Detailed+Floor+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Floor Plans">
+                        <img src="assets/Floor Plans/RCP.jpg" alt="Reflected Ceiling Plan"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=RCP+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Floor Plans">
+                        <img src="assets/Floor Plans/Tags-Dimensions.jpg" alt="Floor Plan with Tags and Dimensions"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Tags+Dimensions+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Floor Plans">
+                        <img src="assets/Floor Plans/plan1.jpg" alt="Floor Plan Layout 1"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Plan+1+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Floor Plans">
+                        <img src="assets/Floor Plans/plan2.jpg" alt="Floor Plan Layout 2"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Plan+2+Fallback';">
+                    </div>
+
+                    <!-- Sections images -->
+                    <div class="grid-item fade-in" data-category="Sections">
+                        <img src="assets/Sections/sec1.jpg" alt="Building Section 1" class="w-full rounded-lg shadow-md"
+                            loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Section+1+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Sections">
+                        <img src="assets/Sections/sec2.jpg" alt="Building Section 2" class="w-full rounded-lg shadow-md"
+                            loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Section+2+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Sections">
+                        <img src="assets/Sections/sec3.jpg" alt="Building Section 3" class="w-full rounded-lg shadow-md"
+                            loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Section+3+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Sections">
+                        <img src="assets/Sections/sec4.jpg" alt="Building Section 4" class="w-full rounded-lg shadow-md"
+                            loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Section+4+Fallback';">
+                    </div>
+
+
+                    <!-- Elevations images -->
+                    <div class="grid-item fade-in" data-category="Elevations">
+                        <img src="assets/Elevations/elev1.png" alt="Elevation View 1"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Elevation+1+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Elevations">
+                        <img src="assets/Elevations/elev2.png" alt="Elevation View 2"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Elevation+2+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Elevations">
+                        <img src="assets/Elevations/elev3.png" alt="Elevation View 3"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Elevation+3+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Elevations">
+                        <img src="assets/Elevations/elev4.jpg" alt="Elevation View 4"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Elevation+4+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Elevations">
+                        <img src="assets/Elevations/elev5.jpg" alt="Elevation View 5"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Elevation+5+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Elevations">
+                        <img src="assets/Elevations/elev6.jpg" alt="Elevation View 6"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Elevation+6+Fallback';">
+                    </div>
+
+                    <!-- Design Process images -->
+                    <div class="grid-item fade-in" data-category="Design Process">
+                        <img src="assets/Design Process/des1.jpg" alt="Design Process Image 1"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Design+Process+1+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Design Process">
+                        <img src="assets/Design Process/des2.jpg" alt="Design Process Image 2"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Design+Process+2+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Design Process">
+                        <img src="assets/Design Process/des3.jpg" alt="Design Process Image 3"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Design+Process+3+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Design Process">
+                        <img src="assets/Design Process/des4.jpg" alt="Design Process Image 4"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Design+Process+4+Fallback';">
+                    </div>
+
+
+                    <!-- Renders images -->
+                    <div class="grid-item fade-in" data-category="Renders">
+                        <img src="assets/Renders/Bar1.jpg" alt="Render of Bar Area 1"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Bar+1+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Renders">
+                        <img src="assets/Renders/checkout.jpg" alt="Render of Checkout Area"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Checkout+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Renders">
+                        <img src="assets/Renders/Country.jpg" alt="Render of Countryside View"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Country+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Renders">
+                        <img src="assets/Renders/machines.jpg" alt="Render of Machines Area"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Machines+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Renders">
+                        <img src="assets/Renders/outside.jpg" alt="Render of Outside View"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Outside+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Renders">
+                        <img src="assets/Renders/parking2.jpg" alt="Render of Parking Area 2"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Parking+2+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Renders">
+                        <img src="assets/Renders/pets.jpg" alt="Render with Pets Area"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Pets+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Renders">
+                        <img src="assets/Renders/seating.jpg" alt="Render of Seating Area"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Seating+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Renders">
+                        <img src="assets/Renders/shelves.jpg" alt="Render of Shelves"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Shelves+Fallback';">
+                    </div>
+
+                    <!-- Vray Attempts images (New Section for your specific images) -->
+                    <div class="grid-item fade-in" data-category="Vray Attempts">
+                        <img src="assets/Vray/vray1.jpg" alt="Failed Vray Attempt 1" class="w-full rounded-lg shadow-md"
+                            loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/5C6BC0/FFFFFF?text=Vray+Attempt+1+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Vray Attempts">
+                        <img src="assets/Vray/vray2.jpg" alt="Failed Vray Attempt 2" class="w-full rounded-lg shadow-md"
+                            loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/5C6BC0/FFFFFF?text=Vray+Attempt+2+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Vray Attempts">
+                        <img src="assets/Vray/vray3.jpg" alt="Failed Vray Attempt 3" class="w-full rounded-lg shadow-md"
+                            loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/5C6BC0/FFFFFF?text=Vray+Attempt+3+Fallback';">
+                    </div>
+                    <!-- Add more of your specific Failed Vray Attempt images here, following the same pattern -->
+
+
+                    <!-- Schedules images -->
+                    <div class="grid-item fade-in" data-category="Schedules">
+                        <img src="assets/Schedules/Doors-Sched.jpg" alt="Doors Schedule Details"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Doors+Schedule+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Schedules">
+                        <img src="assets/Schedules/Lighting-Sched.jpg" alt="Lighting Schedule Details"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Lighting+Schedule+Fallback';">
+                    </div>
+                    <div class="grid-item fade-in" data-category="Schedules">
+                        <img src="assets/Schedules/Furn-Sched.jpg" alt="Furniture Schedule Details"
+                            class="w-full rounded-lg shadow-md" loading="lazy"
+                            onerror="this.onerror=null;this.src='https://placehold.co/600x400/36454F/FFFFFF?text=Furniture+Schedule+Fallback';">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Modal/Lightbox Structure -->
+    <div id="image-modal" class="hidden" aria-hidden="true" role="dialog" aria-modal="true">
+        <button id="close-modal-btn" aria-label="Close image viewer">
+            &times;
+        </button>
+        <div id="modal-content">
+            <img id="modal-image" src="" alt="Full size image view">
+        </div>
+    </div>
+
+    <!-- JavaScript for Image Filtering and Tab Activation -->
+    <script>
+        // Get all main tab buttons and grid items
+        const tabs = document.querySelectorAll('.tab-btn');
+        const items = document.querySelectorAll('.grid-item');
+        // Get the Failed Vray button and its container
+        const vrayBtn = document.getElementById('vray-attempts-btn');
+        const vrayBtnContainer = document.getElementById('vray-btn-container');
+
+        // Get modal elements
+        const imageModal = document.getElementById('image-modal');
+        const modalImage = document.getElementById('modal-image');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+
+        // Function to deactivate all main filter tabs
+        function deactivateMainTabs() {
+            tabs.forEach(t => {
+                t.classList.remove('tab-active');
+                t.classList.add('bg-light-bg', 'text-primary');
+                t.setAttribute('aria-selected', 'false');
+            });
+        }
+
+        // Function to filter and display items based on category
+        function filterItems(filterCategory) {
+            items.forEach(item => {
+                if (filterCategory === 'all' || item.dataset.category === filterCategory) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        }
+
+        // Open Modal Function
+        function openModal(imageSrc, imageAlt) {
+            modalImage.src = imageSrc;
+            modalImage.alt = imageAlt;
+            imageModal.classList.add('visible');
+            imageModal.classList.remove('hidden');
+            imageModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+        }
+
+        // Close Modal Function
+        function closeModal() {
+            imageModal.classList.remove('visible');
+            imageModal.classList.add('hidden');
+            imageModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = ''; // Restore scrolling
+            modalImage.src = ''; // Clear image source
+        }
+
+        // Add click event listener to each main filter tab button
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const filter = tab.dataset.filter;
+
+                // Deactivate Vray button if it's currently active
+                vrayBtn.classList.remove('tab-active');
+                vrayBtn.classList.add('bg-light-bg', 'text-primary'); // Reapply default Vray button style
+
+                // Deactivate all other main tabs
+                deactivateMainTabs();
+
+                // Activate the clicked main tab
+                tab.classList.add('tab-active');
+                tab.classList.remove('bg-light-bg', 'text-primary');
+                tab.setAttribute('aria-selected', 'true');
+
+                // Show/Hide Failed Vray button container based on 'Renders' tab
+                if (filter === 'Renders') {
+                    vrayBtnContainer.classList.remove('hidden');
+                    // Adjust grid width if Vray button container is shown
+                    document.querySelector('.md\\:w-3\\/4').classList.remove('w-full');
+                } else {
+                    vrayBtnContainer.classList.add('hidden');
+                    // Expand grid width if Vray button container is hidden
+                    document.querySelector('.md\\:w-3\\/4').classList.add('w-full');
+                }
+
+                // Filter items based on the clicked main tab's filter
+                filterItems(filter);
+            });
+        });
+
+        // Add click event listener for the Failed Vray button
+        vrayBtn.addEventListener('click', () => {
+            // Deactivate all main filter tabs
+            deactivateMainTabs();
+
+            // Ensure the Renders tab is active when Failed Vray button is clicked
+            // This is because Failed Vray is a sub-filter of Renders
+            const rendersTab = document.querySelector('.tab-btn[data-filter="Renders"]');
+            if (rendersTab) {
+                rendersTab.classList.add('tab-active');
+                rendersTab.classList.remove('bg-light-bg', 'text-primary');
+                rendersTab.setAttribute('aria-selected', 'true');
+            }
+
+            // Activate the Failed Vray button
+            vrayBtn.classList.add('tab-active');
+            vrayBtn.classList.remove('bg-light-bg', 'text-primary'); // Remove default style
+
+            // Filter items to show only 'Vray Attempts' category
+            filterItems('Vray Attempts');
+        });
+
+        // Add click listeners to all grid images for the modal
+        items.forEach(item => {
+            const img = item.querySelector('img');
+            if (img) {
+                img.addEventListener('click', (event) => {
+                    // Prevent the click from bubbling up to the grid item's container
+                    // if that also had a click listener (though not in this current code)
+                    event.stopPropagation();
+                    openModal(img.src, img.alt);
+                });
+            }
+        });
+
+        // Add event listeners for closing the modal
+        closeModalBtn.addEventListener('click', closeModal);
+        imageModal.addEventListener('click', (event) => {
+            // Close modal only if the click is on the overlay itself, not the image
+            if (event.target === imageModal) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && imageModal.classList.contains('visible')) {
+                closeModal();
+            }
+        });
+
+
+        // Activate the "All" tab by default when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const allTab = document.querySelector('.tab-btn[data-filter="all"]');
+            if (allTab) {
+                allTab.click(); // Simulate a click on 'All' to set initial state
+            }
+            // Ensure Failed Vray button container is hidden on initial load
+            vrayBtnContainer.classList.add('hidden');
+            // Ensure the main grid takes full width initially
+            document.querySelector('.md\\:w-3\\/4').classList.add('w-full');
+        });
+    </script>
+</body>
+
+</html>

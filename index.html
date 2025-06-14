@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BREWHAUS - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:ital,wght@1,400..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="enhanced-style.css">
+</head>
+
+<body>
+
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="text-2xl font-bold text-secondary floating">BREWHAUS</a>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="enhanced-the-space.html"
+                        class="font-medium transition-colors hover:text-accent text-primary">Design Details</a>
+                    <a href="enhanced-design-story.html"
+                        class="font-medium transition-colors hover:text-accent text-primary">Design Story</a>
+                    <a href="enhanced-site-analysis.html"
+                        class="font-medium transition-colors hover:text-accent text-primary">Site Analysis</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-section relative min-h-screen flex items-center justify-center"
+        style="background-image: url('assets/Renders/outside.jpg'); background-size: cover; background-position: center; background-attachment: fixed;">
+        <div class="hero-overlay absolute inset-0"></div>
+        <div class="relative z-10 text-center max-w-4xl mx-auto px-6">
+            <h1 class="text-6xl md:text-8xl font-bold mb-6 tracking-tight text-primary fade-in">BREWHAUS</h1>
+            <p class="text-2xl md:text-3xl font-serif-italic mb-12 text-secondary fade-in fade-in-delay-1">
+                Borne of soil, served with soul.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center fade-in fade-in-delay-2">
+                <a href="enhanced-the-space.html" class="btn-primary flex items-center group">
+                    Explore The Design
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+                <a href="enhanced-design-story.html" class="btn-secondary">
+                    The Design Story
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-secondary scroll-reveal">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <p class="text-xl md:text-2xl leading-relaxed text-secondary">
+                An interior design portfolio celebrating the fusion of raw, earthy materials with refined, soulful
+                details. BREWHAUS is more than a coffee shop; it's a sensory experience crafted with intention.
+            </p>
+        </div>
+    </section>
+
+    <section class="py-20 bg-base scroll-reveal">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center text-primary">The BrewHaus Vision</h2>
+            <div class="flex justify-center">
+                <img src="assets/home/brief.png" alt="BrewHaus Project Vision and Goals"
+                    class="w-[80vw] h-auto rounded-lg shadow-xl border border-gray-700">
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-base scroll-reveal">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center text-primary"> BrewHaus Mood Board</h2>
+            <div class="flex justify-center">
+                <img src="assets/home/mood.png" alt="BrewHaus Project Vision and Goals"
+                    class="w-[80vw] h-auto rounded-lg shadow-xl border border-gray-700">
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-base scroll-reveal">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-primary">BrewHaus's Soundtrack</h2>
+            <div class="flex justify-center">
+                <iframe style="border-radius:12px"
+                    src="https://open.spotify.com/embed/playlist/2pFEP3mjrQ1bLBfgNO6yxd?utm_source=generator"
+                    width="100%" height="352" frameBorder="0" allowfullscreen=""
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Scroll reveal animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Header background change on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.backgroundColor = 'rgba(26, 26, 26, 0.98)';
+            } else {
+                header.style.backgroundColor = 'rgba(26, 26, 26, 0.95)';
+            }
+        });
+    </script>
+
+</body>
+
+</html>
