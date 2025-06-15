@@ -1,19 +1,513 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BREWHAUS - Home</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="enhanced-style.css">
-</head>
+    <title>Roastery Case Studies</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Google Fonts: Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 
+    <style>
+        /* Base styles from the new stylesheet */
+        body {
+            font-family: "Playfair Display", serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal;
+            background-color: #1a1a1a; /* Dark theme background */
+            color: #f0f0f0; /* Light text */
+            transition: all 0.5s ease;
+            overflow-x: hidden; /* Ensure horizontal scroll is still hidden for the whole page */
+        }
+
+        /* Color scheme for dark theme */
+        .text-accent {
+            color: #EB5E28; /* Accent color */
+        }
+        .text-primary {
+            color: #f0f0f0; /* Primary text color */
+        }
+        .text-secondary {
+            color: #b0b0b0; /* Secondary text color */
+        }
+        .bg-secondary {
+            background-color: #2a2a2a; /* Secondary background color for cards/groups */
+        }
+        .border-secondary {
+            border-color: #404040; /* Border color */
+        }
+        .bg-base {
+            background-color: #1a1a1a; /* Base background color */
+        }
+
+        /* Card animations and styling */
+        .card {
+            background-color: #2a2a2a; /* Secondary background */
+            border-radius: 1.5rem;
+            padding: 2rem; /* Increased padding */
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative; /* Essential for positioning child elements */
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Adjusted shadow for dark theme */
+            z-index: 0; /* Base z-index for the card */
+            margin: 0 auto; /* Center the card horizontally if it's the only one */
+            max-width: 900px; /* Max width to keep it reasonable */
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #EB5E28, transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+        .card:hover::before {
+            transform: translateX(100%);
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); /* Stronger shadow on hover */
+            border-color: rgba(235, 94, 40, 0.3); /* Accent border on hover */
+            z-index: 10; /* Bring card to front on hover */
+        }
+
+        /* Image styling */
+        .card-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-bottom: 1px solid #3a3a3a; /* Darker border */
+            border-top-left-radius: 1.5rem;
+            border-top-right-radius: 1.5rem;
+            transition: transform 0.5s ease; /* For hover effect */
+            cursor: pointer; /* Indicate clickable */
+        }
+        .card:hover .card-image {
+            transform: scale(1.05); /* Zoom effect on image hover */
+        }
+
+        .card-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #EB5E28; /* Accent color for titles */
+            text-align: center; /* Centered */
+        }
+        .meta-info {
+            font-size: 0.9rem;
+            color: #b0b0b0; /* Secondary text color */
+            margin-bottom: 1.5rem;
+            text-align: center; /* Centered */
+        }
+        .section-group {
+            background-color: #1f1f1f; /* Slightly darker than card background */
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #3a3a3a; /* Darker border */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15); /* Stronger inner shadow for depth */
+            position: relative;
+            text-align: center; /* Center the block content including list */
+        }
+        .section-group ul {
+            display: inline-block; /* Make the ul an inline-block to respect parent's text-align: center */
+            text-align: left; /* Align list items to the left within their block */
+            padding-left: 0; /* Remove default padding if present */
+            list-style: none; /* Remove default list style to use custom before pseudo-element */
+        }
+
+        .section-title {
+            font-size: 1.625rem;
+            font-weight: 600;
+            color: #f0f0f0; /* Primary text color */
+            margin-top: 0;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #EB5E28; /* Accent color for underline */
+            padding-bottom: 0.5rem;
+            text-align: center; /* Centered */
+        }
+        .list-item {
+            margin-bottom: 0.75rem;
+            padding-left: 1.75rem; /* Space for the custom bullet */
+            position: relative;
+            line-height: 1.5;
+            color: #f0f0f0; /* Primary text color for list items */
+            text-align: left; /* Keep text left-aligned within its li */
+        }
+        .list-item::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #EB5E28; /* Accent color for checkmark */
+            font-weight: bold;
+            font-size: 1.2rem;
+            top: 0.1rem;
+        }
+        .challenge-solution .list-item::before {
+            content: '•';
+            color: #e53e3e; /* Red for challenges */
+        }
+        .challenge-solution .list-item .solution-text {
+            color: #b0b0b0; /* Secondary text color for solution text */
+        }
+        .challenge-solution .list-item .solution-text::before {
+            content: '→';
+            color: #63b3ed; /* Lighter blue for solutions in dark theme */
+            margin-right: 0.5rem;
+        }
+
+        .footer {
+            background-color: #1a1a1a; /* Base background for footer */
+            color: #b0b0b0; /* Secondary text color */
+            padding: 2.5rem 0;
+            text-align: center;
+            font-size: 1rem;
+            margin-top: 4rem;
+            border-top-left-radius: 1.5rem;
+            border-top-right-radius: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Text animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .fade-in-delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .fade-in-delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .fade-in-delay-3 {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Glow effects for cards */
+        .card.glow {
+            box-shadow: 0 0 20px rgba(235, 94, 40, 0.3);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .card.glow:hover {
+            box-shadow: 0 0 30px rgba(235, 94, 40, 0.5);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #404040;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #EB5E28;
+        }
+
+        /* Selection styling */
+        ::selection {
+            background-color: rgba(235, 94, 40, 0.3);
+            color: #f0f0f0;
+        }
+
+        /* Focus styles for accessibility */
+        *:focus {
+            outline: 2px solid #EB5E28;
+            outline-offset: 2px;
+        }
+
+        /* Smooth transitions for all interactive elements */
+        * {
+            transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Button specific styles */
+        .tab-button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 0.8s; /* Delay after initial text */
+            opacity: 0;
+        }
+
+        .tab-button {
+            background-color: #2a2a2a; /* Secondary background */
+            color: #f0f0f0; /* Primary text */
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid #404040; /* Secondary border */
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            flex-grow: 1; /* Allow buttons to grow */
+            max-width: 280px; /* Max width for individual buttons */
+        }
+
+        .tab-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(235, 94, 40, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .tab-button:hover::before {
+            left: 100%;
+        }
+
+        .tab-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            border-color: #EB5E28; /* Accent color on hover */
+            color: #EB5E28; /* Accent text color on hover */
+        }
+
+        .tab-button.active {
+            background-color: #EB5E28; /* Accent color for active button */
+            color: #1a1a1a; /* Dark text for active button */
+            border-color: #EB5E28;
+            box-shadow: 0 8px 20px rgba(235, 94, 40, 0.4);
+            transform: translateY(-2px); /* Slight lift for active */
+            pointer-events: none; /* Disable clicks on active button */
+        }
+
+        /* Content section hidden by default */
+        .roastery-content {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+            padding-top: 1rem; /* Space between button and content */
+        }
+
+        .roastery-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Styles for scroll-activated images */
+        .card-hover-images-container {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column; /* Stack vertically */
+            gap: 60px; /* Increased space between images for more spread */
+            opacity: 0; /* Initially hidden */
+            pointer-events: none; /* Allows clicks to pass through */
+            transition: opacity 0.5s ease; /* Fade transition */
+            z-index: 1; /* Below text content but above card background */
+        }
+
+        /* Class to activate images on scroll */
+        .card-hover-images-container.active-images {
+            opacity: 1;
+        }
+
+        .card-hover-images-left {
+            left: -250px; /* Further out */
+        }
+
+        .card-hover-images-right {
+            right: -250px; /* Further out */
+        }
+
+        .card-hover-images-container img {
+            width: 200px; /* Increased image size */
+            height: 200px; /* Increased image size */
+            object-fit: cover;
+            border-radius: 0.5rem; /* Slightly rounded */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Darker shadow for dark theme */
+            border: none; /* No border */
+            transition: transform 0.3s ease; /* For rotation animation */
+            cursor: pointer; /* Indicate clickable */
+        }
+
+        /* Individual transforms for randomness and more spread/less tilt */
+        .card-hover-images-left img:nth-child(1) {
+            transform: translateY(-100px) rotate(-8deg); /* Less tilt, more spread */
+        }
+        .card-hover-images-left img:nth-child(2) {
+            transform: translateY(0px) rotate(4deg);
+        }
+        .card-hover-images-left img:nth-child(3) {
+            transform: translateY(100px) rotate(-6deg);
+        }
+
+        .card-hover-images-right img:nth-child(1) {
+            transform: translateY(-80px) rotate(7deg);
+        }
+        .card-hover-images-right img:nth-child(2) {
+            transform: translateY(80px) rotate(-9deg);
+        }
+        .card-hover-images-right img:nth-child(3) {
+            transform: translateY(-20px) rotate(5deg);
+        }
+
+        /* To ensure text is always on top of images */
+        .card-content {
+            position: relative;
+            z-index: 2; /* Higher z-index than images */
+        }
+
+        /* Media query for smaller screens: hide or reposition images */
+        @media (max-width: 1024px) { /* Adjust breakpoint as needed */
+            .card-hover-images-container {
+                display: none; /* Hide images on smaller screens to avoid crowding */
+            }
+        }
+
+        /* Lightbox/Modal styles */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); /* Darker, more opaque */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it's on top of everything */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .lightbox-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Ensure the whole image is visible */
+            border-radius: 0.75rem;
+            box-shadow: 0 0 25px rgba(235, 94, 40, 0.6); /* Glow around lightbox image */
+            transition: transform 0.2s ease;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            color: #f0f0f0;
+            font-size: 2.5rem;
+            cursor: pointer;
+            z-index: 1001;
+            padding: 0.5rem;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.4);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .lightbox-close:hover {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #EB5E28;
+        }
+
+        /* SWOT Section Styling */
+        .swot-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem; /* Increased gap */
+            margin-top: 1.5rem;
+        }
+
+        /* Force 2x2 grid on larger screens */
+        @media (min-width: 768px) { /* Adjust breakpoint if needed */
+            .swot-grid-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .swot-box {
+            background-color: #2f2f2f; /* Slightly lighter than section-group */
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid #555;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .swot-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .swot-box h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid; /* Defined by specific class */
+            color: #f0f0f0; /* Default color, overridden by specific classes */
+        }
+
+        .swot-box p {
+            font-size: 1rem;
+            color: #b0b0b0;
+            line-height: 1.6;
+        }
+
+        /* Specific SWOT colors */
+        .swot-strength h4 { border-color: #4CAF50; color: #4CAF50; } /* Green */
+        .swot-weakness h4 { border-color: #F44336; color: #F44336; } /* Red */
+        .swot-opportunity h4 { border-color: #2196F3; color: #2196F3; } /* Blue */
+        .swot-threat h4 { border-color: #FFC107; color: #FFC107; } /* Amber/Yellow */
+    </style>
+</head>
 <body>
 
+    <!-- Header Section (Navbar) -->
     <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex justify-between items-center h-20">
@@ -25,107 +519,592 @@
                         class="font-medium transition-colors hover:text-accent text-primary">Design Story</a>
                     <a href="enhanced-site-analysis.html"
                         class="font-medium transition-colors hover:text-accent text-primary">Site Analysis</a>
+                    <a href="roastery-case-studies.html"
+                        class="font-medium transition-colors hover:text-accent text-primary">Case Studies</a>
                 </nav>
             </div>
         </div>
     </header>
 
-    <section class="hero-section relative min-h-screen flex items-center justify-center"
-        style="background-image: url('assets/Renders/outside.jpg'); background-size: cover; background-position: center; background-attachment: fixed;">
-        <div class="hero-overlay absolute inset-0"></div>
-        <div class="relative z-10 text-center max-w-4xl mx-auto px-6">
-            <h1 class="text-6xl md:text-8xl font-bold mb-6 tracking-tight text-primary fade-in">BREWHAUS</h1>
-            <p class="text-2xl md:text-3xl font-serif-italic mb-12 text-secondary fade-in fade-in-delay-1">
-                Borne of soil, served with soul.</p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center fade-in fade-in-delay-2">
-                <a href="enhanced-the-space.html" class="btn-primary flex items-center group">
-                    Explore The Design
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                </a>
-                <a href="enhanced-design-story.html" class="btn-secondary">
-                    The Design Story
-                </a>
-            </div>
-        </div>
-    </section>
+    <main class="container mx-auto px-4 py-8 lg:px-8" style="padding-top: 100px;"> <!-- Added padding-top to account for fixed header -->
 
-    <section class="py-20 bg-secondary scroll-reveal">
-        <div class="max-w-5xl mx-auto px-6 text-center">
-            <p class="text-xl md:text-2xl leading-relaxed text-secondary">
-                An interior design portfolio celebrating the fusion of raw, earthy materials with refined, soulful
-                details. BREWHAUS is more than a coffee shop; it's a sensory experience crafted with intention.
+        <section class="text-center mb-12">
+            <p class="text-xl text-secondary max-w-3xl mx-auto leading-relaxed fade-in fade-in-delay-1">
+                Explore a collection of roastery case studies, highlighting innovative architectural designs,
+                sustainable practices, and unique user experiences. Discover how these spaces blend functionality,
+                aesthetics, and cultural context to create inspiring coffee environments.
             </p>
-        </div>
-    </section>
+        </section>
 
-    <section class="py-20 bg-base scroll-reveal">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center text-primary">The BrewHaus Vision</h2>
-            <div class="flex justify-center">
-                <img src="assets/home/brief.png" alt="BrewHaus Project Vision and Goals"
-                    class="w-[80vw] h-auto rounded-lg shadow-xl border border-gray-700">
-            </div>
+        <!-- Buttons for Roastery Selection -->
+        <div class="tab-button-container">
+            <button class="tab-button active" data-target="arabica-egypt-content">Arabica Egypt</button>
+            <button class="tab-button" data-target="arabica-hcmc-content">Arabica Ho Chi Minh</button>
+            <button class="tab-button" data-target="anh-coffee-content">Anh Coffee</button>
+            <button class="tab-button" data-target="klim-coffee-content">Klim Coffee</button>
         </div>
-    </section>
 
-    <section class="py-20 bg-base scroll-reveal">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center text-primary"> BrewHaus Mood Board</h2>
-            <div class="flex justify-center">
-                <img src="assets/home/mood.png" alt="BrewHaus Project Vision and Goals"
-                    class="w-[80vw] h-auto rounded-lg shadow-xl border border-gray-700">
-            </div>
-        </div>
-    </section>
+        <!-- Roastery Content Sections -->
+        <div id="arabica-egypt-content" class="roastery-content active">
+            <section>
+                <div class="card glow">
+                    <!-- Left side images -->
+                    <div class="card-hover-images-container card-hover-images-left">
+                        <img src="assets/Case/Egypt/E1.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/5C6BC0/FFFFFF?text=Egypt+Img+1';" alt="Egypt Image 1">
+                        <img src="assets/Case/Egypt/E2.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/42A5F5/FFFFFF?text=Egypt+Img+2';" alt="Egypt Image 2">
+                        <img src="assets/Case/Egypt/E3.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/29B6F6/FFFFFF?text=Egypt+Img+3';" alt="Egypt Image 3">
+                    </div>
 
-    <section class="py-20 bg-base scroll-reveal">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-primary">BrewHaus's Soundtrack</h2>
-            <div class="flex justify-center">
-                <iframe style="border-radius:12px"
-                    src="https://open.spotify.com/embed/playlist/2pFEP3mjrQ1bLBfgNO6yxd?utm_source=generator"
-                    width="100%" height="352" frameBorder="0" allowfullscreen=""
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"></iframe>
-            </div>
+                    <img src="assets/Case/Egypt/EM.jpg" onerror="this.onerror=null;this.src='https://placehold.co/800x300/a0aec0/ffffff?text=Arabica+Egypt+Roastery';" alt="Arabica Egypt Cairo Roastery" class="card-image">
+                    <div class="card-content">
+                        <h2 class="card-title">%Arabica Egypt Cairo Roastery</h2>
+                        <p class="meta-info">Architects: no.10 NOMURA Co., Ltd. | Location: New Cairo City, Egypt | Year: 2024 | Area: 247 m²</p>
+
+                        <div class="section-group" id="egypt-design-concept">
+                            <h3 class="section-title">Design Concept & Objectives</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Draws inspiration from Egypt's desert landscapes and ancient ruins.</li>
+                                <li class="list-item">Concept of "piling up" with modular limestone blocks creating organic flow.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Context & Site Analysis</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Located in U-Venues, blending modern urban development with historical context.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Spatial Organization</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Central pathway guides customers through roasting area to seating zones.</li>
+                                <li class="list-item">Modular limestone blocks create distinct zones.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Sustainability & Innovation</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Locally sourced limestone reduces emissions and supports local industries.</li>
+                                <li class="list-item">Emphasis on natural materials and passive cooling.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Materials & Construction</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">800mm modular limestone blocks reflect irregular quarry landscape.</li>
+                                <li class="list-item">Homage to Egypt's natural resources and traditional construction.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Aesthetic & Form</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Harmonious blend of traditional and contemporary aesthetics.</li>
+                                <li class="list-item">Natural limestone texture with minimalist forms for a serene atmosphere.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">User Experience & Functionality</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Immersive space reflecting Egypt's landscape.</li>
+                                <li class="list-item">Thoughtful arrangement enhances coffee-drinking experience.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group challenge-solution">
+                            <h3 class="section-title">Challenges & Solutions</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item"><span class="font-semibold text-primary">Challenge:</span> Integrating traditional materials into a modern retail space.</li>
+                                <li class="list-item"><span class="font-semibold text-accent solution-text">Solution:</span> Utilizing modular limestone blocks in a contemporary arrangement.</li>
+                            </ul>
+                        </div>
+
+                        <!-- SWOT Analysis - New Layout -->
+                        <div class="section-group">
+                            <h3 class="section-title">SWOT Analysis</h3>
+                            <div class="swot-grid-container">
+                                <div class="swot-box swot-strength">
+                                    <h4>Strengths</h4>
+                                    <p>Innovative use of local materials; strong cultural resonance.</p>
+                                </div>
+                                <div class="swot-box swot-weakness">
+                                    <h4>Weaknesses</h4>
+                                    <p>Potential limitations in flexibility due to the fixed nature of limestone blocks.</p>
+                                </div>
+                                <div class="swot-box swot-opportunity">
+                                    <h4>Opportunities</h4>
+                                    <p>Setting a precedent for culturally inspired modern retail spaces in Egypt.</p>
+                                </div>
+                                <div class="swot-box swot-threat">
+                                    <h4>Threats</h4>
+                                    <p>Maintenance challenges associated with natural stone materials.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- Right side images -->
+                    <div class="card-hover-images-container card-hover-images-right">
+                        <img src="assets/Case/Egypt/E4.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/5C6BC0/FFFFFF?text=Egypt+Img+4';" alt="Egypt Image 4">
+                        <img src="assets/Case/Egypt/E5.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/42A5F5/FFFFFF?text=Egypt+Img+5';" alt="Egypt Image 5">
+                        <img src="assets/Case/Egypt/Ch1.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/29B6F6/FFFFFF?text=Egypt+Img+6';" alt="Egypt Image 6">
+                    </div>
+                </div>
+            </section>
         </div>
-    </section>
+
+        <div id="arabica-hcmc-content" class="roastery-content">
+            <section>
+                <div class="card glow">
+                    <!-- Left side images for HCMC -->
+                    <div class="card-hover-images-container card-hover-images-left">
+                        <img src="assets/Case/Ho-Chi/H1.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/9C27B0/FFFFFF?text=HCMC+Img+1';" alt="HCMC Image 1">
+                        <img src="assets/Case/Ho-Chi/H2.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/673AB7/FFFFFF?text=HCMC+Img+2';" alt="HCMC Image 2">
+                        <img src="assets/Case/Ho-Chi/H3.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/3F51B5/FFFFFF?text=HCMC+Img+3';" alt="HCMC Image 3">
+                    </div>
+                    <img src="assets/Case/Ho-Chi/HM.jpg" onerror="this.onerror=null;this.src='https://placehold.co/800x300/cbd5e0/ffffff?text=Arabica+HCMC+Roastery';" alt="Arabica Ho Chi Minh City Roastery" class="card-image">
+                    <div class="card-content">
+                        <h2 class="card-title">%Arabica Ho Chi Minh City Roastery</h2>
+                        <p class="meta-info">Architects: Nguyen Khai Architects & Associates | Location: Ho Chi Minh City, Vietnam | Year: 2024 | Area: 255 m²</p>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Design Concept & Objectives</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Blends rich heritage with modern aesthetics.</li>
+                                <li class="list-item">Retains traditional base materials, introduces glass blocks and rattan ceilings.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Context & Site Analysis</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Adjacent to iconic landmarks (Central Post Office, Notre Dame Cathedral).</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Spatial Organization</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Central pathway guides customers; glass partitions divide seating areas.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Sustainability & Innovation</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Traditional materials (rattan) and natural light contribute to sustainability.</li>
+                                <li class="list-item">Adaptive reuse minimizes environmental impact.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Materials & Construction</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Stainless steel, exposed aggregate floors, warm wooden accents.</li>
+                                <li class="list-item">Rattan ceiling adds texture and references Vietnamese craftsmanship.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Aesthetic & Form</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Industrial vibe softened by natural materials and light.</li>
+                                <li class="list-item">Interplay of shadows through rattan ceiling enhances sensory experience.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">User Experience & Functionality</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Indoor/outdoor seating with views of historic architecture.</li>
+                                <li class="list-item">Transparent design allows observation of coffee-making process.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group challenge-solution">
+                            <h3 class="section-title">Challenges & Solutions</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item"><span class="font-semibold text-primary">Challenge:</span> Balancing modern design with historical context preservation.</li>
+                                <li class="list-item"><span class="font-semibold text-accent solution-text">Solution:</span> Integrating contemporary materials while maintaining traditional structures.</li>
+                            </ul>
+                        </div>
+
+                        <!-- SWOT Analysis - New Layout -->
+                        <div class="section-group">
+                            <h3 class="section-title">SWOT Analysis</h3>
+                            <div class="swot-grid-container">
+                                <div class="swot-box swot-strength">
+                                    <h4>Strengths</h4>
+                                    <p>Strategic location; successful blend of tradition and modernity.</p>
+                                </div>
+                                <div class="swot-box swot-weakness">
+                                    <h4>Weaknesses</h4>
+                                    <p>Potential constraints due to preservation requirements.</p>
+                                </div>
+                                <div class="swot-box swot-opportunity">
+                                    <h4>Opportunities</h4>
+                                    <p>Attracting both locals and tourists seeking authentic experiences.</p>
+                                </div>
+                                <div class="swot-box swot-threat">
+                                    <h4>Threats</h4>
+                                    <p>Competition from other cafés in a densely populated area.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Right side images for HCMC -->
+                    <div class="card-hover-images-container card-hover-images-right">
+                        <img src="assets/Case/Ho-Chi/H4.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/7E57C2/FFFFFF?text=HCMC+Img+4';" alt="HCMC Image 4">
+                        <img src="assets/Case/Ho-Chi/H5.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/5C6BC0/FFFFFF?text=HCMC+Img+5';" alt="HCMC Image 5">
+                        <img src="assets/Case/Ho-Chi/H6.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/42A5F5/FFFFFF?text=HCMC+Img+6';" alt="HCMC Image 6">
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="anh-coffee-content" class="roastery-content">
+            <section>
+                <div class="card glow">
+                    <!-- Left side images for Anh Coffee -->
+                    <div class="card-hover-images-container card-hover-images-left">
+                        <img src="assets/Case/Anh/A1.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/AD1457/FFFFFF?text=Anh+Img+1';" alt="Anh Image 1">
+                        <img src="assets/Case/Anh/A2.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/D81B60/FFFFFF?text=Anh+Img+2';" alt="Anh Image 2">
+                        <img src="assets/Case/Anh/A3.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/EC407A/FFFFFF?text=Anh+Img+3';" alt="Anh Image 3">
+                    </div>
+                    <img src="assets/Case/Anh/AM.jpg" onerror="this.onerror=null;this.src='https://placehold.co/800x300/a0aec0/ffffff?text=Anh+Coffee+Roastery';" alt="Anh Coffee Roastery" class="card-image">
+                    <div class="card-content">
+                        <h2 class="card-title">Anh Coffee Roastery</h2>
+                        <p class="meta-info">Architects: Red5studio | Location: Ho Chi Minh City, Vietnam | Year: 2021 | Area: 374 m²</p>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Design Concept & Objectives</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Inspired by Vietnam's basalt red soil and cloudy skies.</li>
+                                <li class="list-item">Evokes feeling of being immersed in a floating landscape.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Context & Site Analysis</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Central Saigon location with large façade and deep setback.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Spatial Organization</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Connects existing columns with large communal table on first floor.</li>
+                                <li class="list-item">Pathway to outdoor garden on second floor with central atrium.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Sustainability & Innovation</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Locally sourced materials, natural light, and ventilation.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Materials & Construction</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Red terracotta bricks, white iron grid ceiling, navy blue accents, natural wood.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Aesthetic & Form</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Curved communal tables and straight brick lines create dynamic environment.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">User Experience & Functionality</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Fosters community through shared spaces and integrates nature.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group challenge-solution">
+                            <h3 class="section-title">Challenges & Solutions</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item"><span class="font-semibold text-primary">Challenge:</span> Transforming a rigid office block into a warm, inviting space.</li>
+                                <li class="list-item"><span class="font-semibold text-accent solution-text">Solution:</span> Utilizing terracotta bricks and a white mesh ceiling.</li>
+                            </ul>
+                        </div>
+
+                        <!-- SWOT Analysis - New Layout -->
+                        <div class="section-group">
+                            <h3 class="section-title">SWOT Analysis</h3>
+                            <div class="swot-grid-container">
+                                <div class="swot-box swot-strength">
+                                    <h4>Strengths</h4>
+                                    <p>Strong brand identity; innovative use of materials.</p>
+                                </div>
+                                <div class="swot-box swot-weakness">
+                                    <h4>Weaknesses</h4>
+                                    <p>Limited brand recognition as a new entrant in the market.</p>
+                                </div>
+                                <div class="swot-box swot-opportunity">
+                                    <h4>Opportunities</h4>
+                                    <p>Appealing to customers seeking unique and immersive café experiences.</p>
+                                </div>
+                                <div class="swot-box swot-threat">
+                                    <h4>Threats</h4>
+                                    <p>Competition from established coffee brands in the area.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Right side images for Anh Coffee -->
+                    <div class="card-hover-images-container card-hover-images-right">
+                        <img src="assets/Case/Anh/A4.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/F06292/FFFFFF?text=Anh+Img+4';" alt="Anh Image 4">
+                        <img src="assets/Case/Anh/A5.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/BA68C8/FFFFFF?text=Anh+Img+5';" alt="Anh Image 5">
+                        <img src="assets/Case/Anh/A6.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/9575CD/FFFFFF?text=Anh+Img+6';" alt="Anh Image 6">
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="klim-coffee-content" class="roastery-content">
+            <section>
+                <div class="card glow">
+                    <!-- Left side images for Klim Coffee -->
+                    <div class="card-hover-images-container card-hover-images-left">
+                        <img src="assets/Case/Klim/K1.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/FFB300/FFFFFF?text=Klim+Img+1';" alt="Klim Image 1">
+                        <img src="assets/Case/Klim/K2.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/FFA000/FFFFFF?text=Klim+Img+2';" alt="Klim Image 2">
+                        <img src="assets/Case/Klim/K3.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/FB8C00/FFFFFF?text=Klim+Img+3';" alt="Klim Image 3">
+                    </div>
+                    <img src="assets/Case/Klim/KM.jpg" onerror="this.onerror=null;this.src='https://placehold.co/800x300/cbd5e0/ffffff?text=Klim+Coffee+Roasting+Co.';" alt="Klim Coffee Roasting Co." class="card-image">
+                    <div class="card-content">
+                        <h2 class="card-title">Klim Coffee Roasting Co.</h2>
+                        <p class="meta-info">Architects: SuiL | Location: Mount Waverley, Australia | Year: 2024 | Area: 176 m² (Internal: 136 m²; External: 35.1 m²)</p>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Design Concept & Objectives</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Core concept: transparency and craftsmanship, using "grid" and "box" spatial language.</li>
+                                <li class="list-item">"The Box" (glazed room) allows full visibility into roasting, turning it into a performative act.</li>
+                                <li class="list-item">Objective: Elevate coffee roasting from backend process to curated, observable experience.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Context & Site Analysis</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Suburban Melbourne neighborhood; balances industrial functionality with café aesthetic.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Spatial Organization</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Co-located café and roastery within tight floor plan.</li>
+                                <li class="list-item">Layout around central transparent "Roast Room," surrounded by seating, retail, kitchen.</li>
+                                <li class="list-item">Bi-folding glass doors open to timber deck for indoor-outdoor extension.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Materials & Construction</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Timber elements for warmth; black steel framing for industrial roots.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Aesthetic & Form</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Minimalism with raw materiality; clean but honest aesthetic.</li>
+                                <li class="list-item">Contrast between hard (glass, steel, concrete) and soft (timber, fabric) materials.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">Sustainability & Innovation</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Natural lighting and cross ventilation reduce reliance on artificial systems.</li>
+                                <li class="list-item">Optimized material selection and spatial orientation for energy efficiency.</li>
+                                <li class="list-item">Roasting process visible but thermally and acoustically isolated.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group">
+                            <h3 class="section-title">User Experience & Functionality</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item">Patrons experience coffee-making in real-time due to transparent layout.</li>
+                                <li class="list-item">Open floor plan encourages movement; seating caters to individuals and groups.</li>
+                                <li class="list-item">Supports casual consumption and coffee education.</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-group challenge-solution">
+                            <h3 class="section-title">Challenges & Solutions</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="list-item"><span class="font-semibold text-primary">Challenge:</span> Balancing industrial needs with cozy, high-end café aesthetic.</li>
+                                <li class="list-item"><span class="font-semibold text-accent solution-text">Solution:</span> Use of "Roast Box" as visually accessible and functionally isolated environment.</li>
+                                <li class="list-item"><span class="font-semibold">Challenge:</span> Space constraints in integrating multiple programs.</li>
+                                <li class="list-item"><span class="font-semibold text-accent solution-text">Solution:</span> Smart zoning and multi-use central feature.</li>
+                            </ul>
+                        </div>
+
+                        <!-- SWOT Analysis - New Layout -->
+                        <div class="section-group">
+                            <h3 class="section-title">SWOT Analysis</h3>
+                            <div class="swot-grid-container">
+                                <div class="swot-box swot-strength">
+                                    <h4>Strengths</h4>
+                                    <p>Clear and cohesive brand identity rooted in transparency and craftsmanship.</p>
+                                </div>
+                                <div class="swot-box swot-weakness">
+                                    <h4>Weaknesses</h4>
+                                    <p>Compact size may limit roasting capacity or customer volume during peak hours.</p>
+                                </div>
+                                <div class="swot-box swot-opportunity">
+                                    <h4>Opportunities</h4>
+                                    <p>Potential to host coffee education events, tastings, or community workshops.</p>
+                                </div>
+                                <div class="swot-box swot-threat">
+                                    <h4>Threats</h4>
+                                    <p>Higher initial investment due to specialized construction and glazing.</p>
+                                    <p>Possible noise or odor complaints from nearby residential areas.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Right side images for Klim Coffee -->
+                    <div class="card-hover-images-container card-hover-images-right">
+                        <img src="assets/Case/Klim/K4.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/C67C00/FFFFFF?text=Klim+Img+4';" alt="Klim Image 4">
+                        <img src="assets/Case/Klim/K5.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/EF6C00/FFFFFF?text=Klim+Img+5';" alt="Klim Image 5">
+                        <img src="assets/Case/Klim/K6.jpg" onerror="this.onerror=null;this.src='https://placehold.co/200x200/FF9800/FFFFFF?text=Klim+Img+6';" alt="Klim Image 6">
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox-overlay" id="lightboxOverlay">
+        <div class="lightbox-content">
+            <span class="lightbox-close" id="lightboxClose">&times;</span>
+            <img src="" alt="Full size image" id="lightboxImage">
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <p>&copy; 2024 Roastery Case Studies. All rights reserved.</p>
+    </footer>
 
     <script>
-        // Scroll reveal animation
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+        document.addEventListener('DOMContentLoaded', () => {
+            const buttons = document.querySelectorAll('.tab-button');
+            const contents = document.querySelectorAll('.roastery-content');
+            const lightboxOverlay = document.getElementById('lightboxOverlay');
+            const lightboxImage = document.getElementById('lightboxImage');
+            const lightboxClose = document.getElementById('lightboxClose');
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('revealed');
+            // Function to show a specific tab content
+            function showContent(targetId) {
+                contents.forEach(content => {
+                    if (content.id === targetId) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
+            }
+
+            // Function to set active button state
+            function setActiveButton(clickedButton) {
+                buttons.forEach(button => {
+                    button.classList.remove('active');
+                });
+                clickedButton.classList.add('active');
+            }
+
+            // Intersection Observer to handle image visibility on scroll
+            const observerOptions = {
+                root: null, // relative to the viewport
+                rootMargin: '0px',
+                threshold: 0.2 // Trigger when 20% of the target (image container) is visible
+            };
+
+            const imageContainerObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active-images');
+                    } else {
+                        entry.target.classList.remove('active-images');
+                    }
+                });
+            }, observerOptions);
+
+            // Get all image containers and observe them directly
+            const allImageContainers = document.querySelectorAll('.card-hover-images-container');
+            allImageContainers.forEach(container => {
+                imageContainerObserver.observe(container);
+            });
+
+            // Add click listeners to buttons (existing logic)
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+                    showContent(targetId);
+                    setActiveButton(button);
+
+                    // When a tab changes, force the Intersection Observer to re-evaluate.
+                    // We do this by unobserving and then re-observing all image containers.
+                    allImageContainers.forEach(container => {
+                        imageContainerObserver.unobserve(container); // Stop observing
+                        imageContainerObserver.observe(container);    // Start observing again
+                    });
+                });
+            });
+
+            // Lightbox functionality
+            document.querySelectorAll('.card-image, .card-hover-images-container img').forEach(img => {
+                img.addEventListener('click', (e) => {
+                    lightboxImage.src = e.target.src;
+                    lightboxImage.alt = e.target.alt;
+                    lightboxOverlay.classList.add('active');
+                });
+            });
+
+            lightboxClose.addEventListener('click', () => {
+                lightboxOverlay.classList.remove('active');
+            });
+
+            lightboxOverlay.addEventListener('click', (e) => {
+                // Close if clicking on the overlay itself, not the image
+                if (e.target === lightboxOverlay) {
+                    lightboxOverlay.classList.remove('active');
                 }
             });
-        }, observerOptions);
 
-        document.querySelectorAll('.scroll-reveal').forEach(el => {
-            observer.observe(el);
-        });
+            // Header background change on scroll
+            window.addEventListener('scroll', () => {
+                const header = document.querySelector('header');
+                // Ensure header is found before attempting to change style
+                if (header) {
+                    if (window.scrollY > 100) {
+                        header.style.backgroundColor = 'rgba(26, 26, 26, 0.98)';
+                    } else {
+                        header.style.backgroundColor = 'rgba(26, 26, 26, 0.95)';
+                    }
+                }
+            });
 
-        // Header background change on scroll
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.style.backgroundColor = 'rgba(26, 26, 26, 0.98)';
-            } else {
-                header.style.backgroundColor = 'rgba(26, 26, 26, 0.95)';
-            }
+            // The initial tab content and its images will be observed immediately
+            // by the observer once the DOM is loaded.
         });
     </script>
-
 </body>
-
 </html>
